@@ -1,0 +1,66 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <!-- ROLE_ENUM -->
+    <!--
+    1=ADMIN
+    2=USER
+    3=GUEST
+    -->
+    <changeSet id="1_1-1" author="dstepanek">
+        <createTable tableName="t_role_enum">
+            <column name="c_id" type="BIGSERIAL">
+                <constraints primaryKey="true" primaryKeyName="role_enum_pk"/>
+            </column>
+            <column name="c_enum" type="VARCHAR(5)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!--
+    1=LOCAL
+    2=GOOGLE
+    3=FACEBOOK
+    4=GITHUB
+    -->
+    <changeSet id="2_1-1" author="dstepanek">
+        <createTable tableName="t_social_enum">
+            <column name="c_id" type="BIGSERIAL">
+                <constraints primaryKey="true" primaryKeyName="social_enum_pk"/>
+            </column>
+            <column name="c_enum" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    
+    <!-- USER -->
+    <changeSet id="1-1" author="dstepanek">
+        <createTable tableName="t_user">
+            <column name="c_id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="user_pk"/>
+            </column>
+            <column name="c_name" type="VARCHAR(40)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="c_surname" type="VARCHAR(40)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="c_password" type="CHAR(60)"/>
+            <column name="c_email" type="VARCHAR(320)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="c_role" type="INT">
+                <constraints nullable="false" foreignKeyName="user_role_enum_fk" references="t_role_enum(c_id)"/>
+            </column>
+            <column name="c_social" type="INT">
+                <constraints nullable="true" foreignKeyName="user_social_enum_fk" references="t_social_enum(c_id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

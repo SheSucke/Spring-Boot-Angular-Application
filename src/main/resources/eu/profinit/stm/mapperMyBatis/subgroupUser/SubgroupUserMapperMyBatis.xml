@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="eu.profinit.stm.mapperMyBatis.subgroupUser.SubgroupUserMapperMyBatis">
+
+    <insert id="insertSubgroupUser">
+        INSERT INTO t_subgroup_user (c_subgroup_id, c_user_id)
+        VALUES (#{subgroupId}, #{userId})
+    </insert>
+
+    <delete id="deleteSubgroupUser">
+        DELETE FROM t_subgroup_user WHERE c_subgroup_id = #{subgroupId} AND c_user_id = #{userId}
+    </delete>
+
+    <delete id="deleteAllSubgroupUsers">
+        DELETE FROM t_subgroup_user WHERE c_subgroup_id = #{subgroupId}
+    </delete>
+
+    <select id="findUsersBySubgroupId" resultMap="eu.profinit.stm.mapperMyBatis.user.UserMapperMyBatis.userResultMap">
+        SELECT u.*
+        FROM t_subgroup_user su
+        LEFT JOIN t_user u
+        ON su.c_user_id = u.c_id
+        WHERE su.c_subgroup_id = #{subgroupId}
+    </select>
+</mapper>

@@ -1,0 +1,66 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <!-- ROLE_ENUM -->
+    <!--
+    1=ADMIN
+    2=USER
+    3=GUEST
+    -->
+    <changeSet id="9-1" author="dstepanek">
+        <insert tableName="t_role_enum">
+            <column name="c_enum" value="ADMIN"/>
+        </insert>
+        <insert tableName="t_role_enum">
+            <column name="c_enum" value="USER"/>
+        </insert>
+        <insert tableName="t_role_enum">
+            <column name="c_enum" value="GUEST"/>
+        </insert>
+    </changeSet>
+
+    <!-- STATUS_ENUM -->
+    <!--
+    1=ACCEPTED
+    2=PENDING
+    3=REJECTED
+    -->
+    <changeSet id="10-1" author="dstepanek">
+        <insert tableName="t_status_enum">
+            <column name="c_enum" value="ACCEPTED"/>
+        </insert>
+        <insert tableName="t_status_enum">
+            <column name="c_enum" value="PENDING"/>
+        </insert>
+        <insert tableName="t_status_enum">
+            <column name="c_enum" value="REJECTED"/>
+        </insert>
+    </changeSet>
+
+    <!-- SOCIAL_ENUM -->
+    <!--
+    1=LOCAL
+    2=GOOGLE
+    3=FACEBOOK
+    4=GITHUB
+    -->
+    <changeSet id="11-1" author="dstepanek">
+        <insert tableName="t_social_enum">
+            <column name="c_enum" value="LOCAL"/>
+        </insert>
+        <insert tableName="t_social_enum">
+            <column name="c_enum" value="GOOGLE"/>
+        </insert>
+        <insert tableName="t_social_enum">
+            <column name="c_enum" value="FACEBOOK"/>
+        </insert>
+        <insert tableName="t_social_enum">
+            <column name="c_enum" value="GITHUB"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

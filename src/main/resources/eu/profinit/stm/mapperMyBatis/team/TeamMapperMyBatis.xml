@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="eu.profinit.stm.mapperMyBatis.team.TeamMapperMyBatis">
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache">
+        <property name="timeToIdleSeconds" value="3600"/><!--1 hour-->
+        <property name="timeToLiveSeconds" value="3600"/><!--1 hour-->
+        <property name="maxEntriesLocalHeap" value="1000"/>
+        <property name="maxEntriesLocalDisk" value="10000000"/>
+        <property name="memoryStoreEvictionPolicy" value="LRU"/>
+    </cache>
+    <resultMap id="teamResultMap" type="Team">
+        <id property="entityId" column="c_id"/>
+        <result property="name" column="c_name"/>
+        <result property="sport" column="c_sport"/>
+
+        <association property="owner" javaType="User">
+            <id property="entityId" column="c_owner"/>
+        </association>
+    </resultMap>
+
+    <insert id="insertTeam" parameterType="Team" useGeneratedKeys="true" keyProperty="entityId">
+        INSERT INTO t_team (c_name, c_sport, c_owner)
+        VALUES (#{name}, #{sport}, #{owner.entityId})
+    </insert>
+
+    <update id="updateTeam" parameterType="Team">
+        UPDATE t_team SET c_name = #{name}, c_sport = #{sport}, c_owner = #{owner.entityId}
+        WHERE c_id = #{entityId}
+    </update>
+
+    <delete id="deleteTeamById" parameterType="Long" >
+        DELETE FROM t_team WHERE c_id = #{id}
+    </delete>
+
+    <select id="findTeamById" parameterType="Long" resultMap="teamResultMap">
+        SELECT * FROM t_team WHERE c_id = #{id}
+    </select>
+
+    <select id="findTeamsByName" parameterType="String" resultMap="teamResultMap">
+        SELECT * FROM t_team WHERE c_name = #{name}
+    </select>
+</mapper>

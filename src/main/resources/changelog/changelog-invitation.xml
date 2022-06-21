@@ -1,0 +1,48 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <!-- STATUS_ENUM -->
+    <!--
+    1=ACCEPTED
+    2=PENDING
+    3=REJECTED
+    -->
+    <changeSet id="8_1-1" author="dstepanek">
+        <createTable tableName="t_status_enum">
+            <column name="c_id" type="BIGSERIAL">
+                <constraints primaryKey="true" primaryKeyName="status_enum_pk"/>
+            </column>
+            <column name="c_enum" type="VARCHAR(8)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- INVITATION -->
+    <changeSet id="8-1" author="dstepanek">
+        <createTable tableName="t_invitation">
+            <column name="c_id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="invitation_pk"/>
+            </column>
+            <column name="c_created" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="c_changed" type="TIMESTAMP"/>
+            <column name="c_status" type="INT">
+                <constraints nullable="false" foreignKeyName="invitation_status_enum_fk" references="t_status_enum(c_id)"/>
+            </column>
+            <column name="c_event_id" type="INT">
+                <constraints nullable="false" foreignKeyName="invitation_event_fk" references="t_event(c_id)"/>
+            </column>
+            <column name="c_user_id" type="INT">
+                <constraints nullable="false" foreignKeyName="invitation_user_fk" references="t_user(c_id)"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint tableName="t_invitation" constraintName="event_id_user_id" columnNames="c_event_id, c_user_id"/>
+    </changeSet>
+
+</databaseChangeLog>

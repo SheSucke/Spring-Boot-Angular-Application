@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="eu.profinit.stm.mapperMyBatis.event.EventMapperMyBatis">
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache">
+        <property name="timeToIdleSeconds" value="3600"/><!--1 hour-->
+        <property name="timeToLiveSeconds" value="3600"/><!--1 hour-->
+        <property name="maxEntriesLocalHeap" value="1000"/>
+        <property name="maxEntriesLocalDisk" value="10000000"/>
+        <property name="memoryStoreEvictionPolicy" value="LRU"/>
+    </cache>
+    <resultMap id="eventResultMap" type="Event">
+        <id property="entityId" column="c_id"/>
+        <result property="date" column="c_date"/>
+        <result property="capacity" column="c_capacity"/>
+        <result property="isCanceled" column="c_canceled"/>
+
+        <association property="place" javaType="Place">
+            <id property="entityId" column="c_place_id"/>
+        </association>
+        <association property="createdBy" javaType="User">
+            <id property="entityId" column="c_created_by"/>
+        </association>
+    </resultMap>
+
+    <insert id="insertEvent" parameterType="Event" useGeneratedKeys="true" keyProperty="entityId">
+        INSERT INTO t_event (c_date, c_capacity, c_canceled, c_created_by, c_place_id)
+        VALUES (#{date}, #{capacity}, #{isCanceled}, #{createdBy.entityId}, #{place.entityId})
+    </insert>
+
+    <update id="updateEvent" parameterType="Event">
+        UPDATE t_event SET
+        c_date = #{date},
+        c_capacity = #{capacity},
+        c_canceled = #{isCanceled},
+        <!--c_created_by = #{createdBy.entityId},-->
+        c_place_id = #{place.entityId}
+        WHERE c_id = #{entityId}
+    </update>
+
+    <delete id="deleteEventById" parameterType="Long">
+        DELETE FROM t_event WHERE c_id = #{id}
+    </delete>
+
+    <select id="findEventById" parameterType="Long" resultMap="eventResultMap">
+        SELECT * FROM t_event WHERE c_id = #{id}
+    </select>
+</mapper>

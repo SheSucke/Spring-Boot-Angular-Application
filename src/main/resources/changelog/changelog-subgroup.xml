@@ -1,0 +1,25 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <!-- SUBGROUP -->
+    <changeSet id="3-1" author="dstepanek">
+        <createTable tableName="t_subgroup">
+            <column name="c_id" type="BIGSERIAL">
+                <constraints primaryKey="true" primaryKeyName="subgroup_pk"/>
+            </column>
+            <column name="c_name" type="VARCHAR(40)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="c_team_id" type="INT">
+                <constraints nullable="false" foreignKeyName="subgroup_team_fk" references="t_team(c_id)"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint tableName="t_subgroup" constraintName="subgroup_name_team_id" columnNames="c_name, c_team_id"/>
+    </changeSet>
+
+
+</databaseChangeLog>

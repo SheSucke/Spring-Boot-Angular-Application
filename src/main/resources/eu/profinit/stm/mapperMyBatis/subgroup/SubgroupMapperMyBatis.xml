@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="eu.profinit.stm.mapperMyBatis.subgroup.SubgroupMapperMyBatis">
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache">
+        <property name="timeToIdleSeconds" value="3600"/><!--1 hour-->
+        <property name="timeToLiveSeconds" value="3600"/><!--1 hour-->
+        <property name="maxEntriesLocalHeap" value="1000"/>
+        <property name="maxEntriesLocalDisk" value="10000000"/>
+        <property name="memoryStoreEvictionPolicy" value="LRU"/>
+    </cache>
+    <resultMap id="subgroupResultMap" type="Subgroup">
+        <id property="entityId" column="c_id"/>
+        <result property="name" column="c_name"/>
+        <result property="teamId" column="c_team_id"/>
+        <!--
+        <collection property="userList" javaType="java.util.ArrayList" ofType="RegisteredUser">
+            <id property="entityId" column="u_id"/>
+            <result property="name" column="u_name"/>
+            <result property="surname" column="c_surname"/>
+            <result property="password" column="c_password"/>
+            <result property="email" column="c_email"/>
+            <result property="role" column="c_role"/>
+        </collection>
+        -->
+    </resultMap>
+
+    <insert id="insertSubgroup" parameterType="Subgroup" useGeneratedKeys="true" keyProperty="entityId">
+        INSERT INTO t_subgroup (c_name, c_team_id)
+        VALUES (#{name}, #{teamId})
+    </insert>
+
+    <update id="updateSubgroup" parameterType="Subgroup">
+        UPDATE t_subgroup
+        SET c_name = #{name}
+        <!--, c_team_id = #{teamId}-->
+        WHERE c_id = #{entityId}
+    </update>
+
+    <delete id="deleteSubgroupById" parameterType="Long">
+        DELETE FROM t_subgroup WHERE c_id = #{id}
+    </delete>
+
+    <select id="findSubgroupById" parameterType="Long" resultMap="subgroupResultMap">
+        SELECT * FROM t_subgroup WHERE c_id = #{id}
+
+        <!--
+        SELECT s.*, u.c_id AS u_id, u.c_name AS u_name
+        FROM t_subgroup s
+        LEFT JOIN t_subgroup_user su
+        ON s.c_id = su.c_subgroup_id
+        LEFT JOIN t_user u
+        ON su.c_user_id = u.c_id
+        WHERE s.c_id = #{id}
+        -->
+    </select>
+
+    <select id="findSubgroupByNameAndTeamId" resultMap="subgroupResultMap">
+        SELECT * FROM t_subgroup WHERE c_team_id = #{teamId} AND c_name = #{subgroupName}
+    </select>
+
+    <select id="findSubgroupsByTeamId" parameterType="Long" resultMap="subgroupResultMap">
+        SELECT * FROM t_subgroup WHERE c_team_id = #{teamId}
+
+        <!--
+        SELECT s.*, u.c_id AS u_id, u.c_name AS u_name
+        FROM t_user u
+        LEFT JOIN t_subgroup_user su
+        ON u.c_id = su.c_user_id
+        RIGHT JOIN t_subgroup s
+        ON su.c_subgroup_id = s.c_id
+        WHERE s.c_team_id = #{teamId}
+
+        FROM t_subgroup s
+        LEFT JOIN t_subgroup_user su
+        ON s.c_id = su.c_subgroup_id
+        INNER JOIN t_user u
+        ON su.c_user_id = u.c_id
+        WHERE s.c_team_id = #{teamId}
+        -->
+    </select>
+</mapper>
